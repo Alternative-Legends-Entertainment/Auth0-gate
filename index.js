@@ -19,11 +19,6 @@ const config = {
   issuerBaseURL: 'https://dev-huzxpx5ujipk53om.us.auth0.com'
 };
 
-//parcel bundler
-const file = "./upload.html"; 
-const options ={};
-let bundler = new Bundler(file, options);
-
 //express.js middleware
 app.use(express.json());
 app.use("/dist", express.static('./dist'));
@@ -33,8 +28,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // auth router attaches /login, /logout, and /callback routes to the baseURL
 app.use(auth(config));
 
-// req.isAuthenticated is provided from the auth router
-app.use(bundler.middleware());
 app.get('/', (req, res) => {
   if (req.oidc.isAuthenticated()) {
     res.redirect('/home');
@@ -45,13 +38,13 @@ app.get('/', (req, res) => {
 
 app.get('/home', (req, res) => {
   let userData = {
-  id: req.oidc.user.sub,
-  name: req.oidc.user.name,
-  email: req.oidc.user.email
-}
-    
-db.set("id", userData); 
-res.sendFile(__dirname + "/index.html");});
+    id: req.oidc.user.sub,
+    name: req.oidc.user.name,
+    email: req.oidc.user.email
+  }
+
+  res.sendFile(__dirname + "/index.html");
+});
 
 app.get('/logout', (req, res) => {
   auth.logout({
@@ -60,11 +53,13 @@ app.get('/logout', (req, res) => {
   });
 });
 
-app.get('/upload', (req, res)=> {
-  
+app.get('/upload', (req, res) => {
+
 })
 
 app.listen(3000, () => {
   console.log('server started');
 });
+
+
 
